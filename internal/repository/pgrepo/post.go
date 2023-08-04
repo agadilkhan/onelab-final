@@ -21,12 +21,13 @@ func NewPostgresPost(client *Postgres) *PostRepository {
 const postsTable = "posts"
 
 func (r *PostRepository) CreatePost(ctx context.Context, p *entity.Post) error {
+
 	query := fmt.Sprintf(`INSERT INTO %s 
 								(title, --1
 								content, --2
 								user_id --3
 								)
-							VALUES ($1, $2, $3, $4)`, postsTable)
+							VALUES ($1, $2, $3)`, postsTable)
 
 	_, err := r.Client.Pool.Exec(ctx, query, p.Title, p.Content, p.UserID)
 	if err != nil {
@@ -57,13 +58,21 @@ func (r *PostRepository) DeletePost(ctx context.Context, id int64) error {
 
 	err := r.Client.Pool.QueryRow(ctx, query, id).Scan(
 		&deletedPost.ID,
-		deletedPost.Title,
-		deletedPost.Content,
-		deletedPost.UserID,
+		&deletedPost.Title,
+		&deletedPost.Content,
+		&deletedPost.UserID,
 	)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (r *PostRepository) GetAllPosts(ctx context.Context) ([]entity.Post, error) {
+	// query := fmt.Sprintf(`SELECT * FROM %s`, postsTable)
+
+	// var posts []entity.Post
+
+	return nil, nil
 }

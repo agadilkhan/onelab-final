@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"log"
 	"net/http"
 
@@ -73,4 +74,19 @@ func (h *Handler) loginUser(ctx *gin.Context) {
 		Message: "success",
 		Data:    accessToken,
 	})
+}
+
+func getAuthUserID(ctx *gin.Context) (int64, error) {
+	
+	userID, ok := ctx.MustGet(authUserID).(int64)
+	if !ok {
+		log.Printf("can't get userID")
+		ctx.JSON(http.StatusBadRequest, &api.Error{
+			Code:    -1,
+			Message: "can't get user id from auth",
+		})
+		return -1, errors.New("can't get user id from auth")
+	}
+
+	return userID, nil
 }

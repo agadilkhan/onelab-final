@@ -16,6 +16,7 @@ import (
 type UserService interface {
 	Register(ctx context.Context, u *entity.User) error
 	Login(ctx context.Context, username, password string) (string, error)
+	VerifyToken(token string) (int64, error)
 }
 
 type userservice struct {
@@ -76,6 +77,5 @@ func (s *userservice) VerifyToken(token string) (int64, error) {
 	if err != nil {
 		return 0, fmt.Errorf("validate token err: %w", err)
 	}
-
 	return payload.UserID, nil
 }

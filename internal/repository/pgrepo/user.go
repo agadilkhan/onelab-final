@@ -42,7 +42,7 @@ func (r *UserRepository) CreateUser(ctx context.Context, u *entity.User) error {
 func (r *UserRepository) GetUser(ctx context.Context, username string) (*entity.User, error) {
 	user := new(entity.User)
 
-	query := fmt.Sprintf(`SELECT first_name, last_name, username, hashed_password FROM %s WHERE username=$1`, usersTable)
+	query := fmt.Sprintf(`SELECT id, first_name, last_name, username, hashed_password FROM %s WHERE username=$1`, usersTable)
 
 	err := pgxscan.Get(ctx, r.Client.Pool, user, query, strings.TrimSpace(username))
 	if err != nil {

@@ -24,7 +24,7 @@ func NewPostService(repo repository.PostRepository) *postservice {
 }
 
 func (s *postservice) CreatePost(ctx context.Context, p *entity.Post) error {
-	return nil
+	return s.Repo.CreatePost(ctx, p)
 }
 
 func (s *postservice) GetPostByID(ctx context.Context, id int64) (*entity.Post, error) {
