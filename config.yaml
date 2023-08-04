@@ -11,3 +11,7 @@ db:
   db_name: 'blog_db'
   username: 'postgres'
   password: 'Alfarabi2004'
+
+token:
+  secretkey: 'Ld9osm)jIP5of3i'
+  ttl: '15m'

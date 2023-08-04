@@ -5,9 +5,11 @@ import "github.com/gin-gonic/gin"
 func (h *Handler) InitRouter() *gin.Engine {
 	router := gin.Default()
 
-	apiV1 := router.Group("/api/v1")
-
-	apiV1.POST("/user-register", h.createUser)
+	auth := router.Group("/auth") 
+	{
+		auth.POST("/register", h.createUser)
+		auth.POST("/login", h.loginUser)
+	}
 
 	return router
 }

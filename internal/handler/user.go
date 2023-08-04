@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/agadilkhan/onelab-final/api"
 	"github.com/agadilkhan/onelab-final/internal/entity"
 	"github.com/gin-gonic/gin"
 )
@@ -14,7 +15,7 @@ type Error struct {
 }
 
 func (h *Handler) createUser(ctx *gin.Context) {
-	var req entity.User
+	var req api.RegisterRequest
 
 	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
@@ -26,7 +27,14 @@ func (h *Handler) createUser(ctx *gin.Context) {
 		return
 	}
 
-	err = h.service.CreateUser(ctx, &req)
+	u := &entity.User{
+		Username:  req.Username,
+		FirstName: req.FirstName,
+		LastName:  req.LastName,
+		Password:  req.Password,
+	}
+
+	err = h.service.Register(ctx, u)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, &Error{
 			Code:    -2,
@@ -36,4 +44,33 @@ func (h *Handler) createUser(ctx *gin.Context) {
 	}
 
 	ctx.Status(http.StatusCreated)
+}
+
+func (h *Handler) loginUser(ctx *gin.Context) {
+	var req api.LoginRequest
+
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		log.Printf("bind json err: %s \n", err.Error())
+		ctx.JSON(http.StatusBadRequest, &api.Error{
+			Code:    -1,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	accessToken, err := h.service.Login(ctx, req.Username, req.Password)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, &api.Error{
+			Code:    -2,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, &api.Ok{
+		Code:    0,
+		Message: "success",
+		Data:    accessToken,
+	})
 }

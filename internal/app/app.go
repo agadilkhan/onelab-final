@@ -10,6 +10,7 @@ import (
 	"github.com/agadilkhan/onelab-final/internal/repository/pgrepo"
 	"github.com/agadilkhan/onelab-final/internal/service"
 	"github.com/agadilkhan/onelab-final/pkg/httpserver"
+	"github.com/agadilkhan/onelab-final/pkg/jwttoken"
 )
 
 func Run(cfg *config.Config) error {
@@ -26,8 +27,9 @@ func Run(cfg *config.Config) error {
 	}
 	log.Println("connection success")
 
+	token := jwttoken.New(cfg.Token.SecretKey)
 	repo := pgrepo.NewPostgresRepository(db)
-	srvs := service.New(*repo)
+	srvs := service.New(*repo, cfg, token)
 	hndlr := handler.New(srvs)
 	server := httpserver.New(
 		hndlr.InitRouter(),

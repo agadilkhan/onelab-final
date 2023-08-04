@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/agadilkhan/onelab-final/internal/entity"
-	"github.com/agadilkhan/onelab-final/internal/repository"
 	"github.com/georgysavva/scany/pgxscan"
 )
 
@@ -13,8 +12,8 @@ type PostRepository struct {
 	Client *Postgres
 }
 
-func NewPostgresPost(client *Postgres) repository.PostRepository {
-	return &PostRepository {
+func NewPostgresPost(client *Postgres) *PostRepository {
+	return &PostRepository{
 		Client: client,
 	}
 }

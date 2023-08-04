@@ -3,16 +3,17 @@ package pgrepo
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/agadilkhan/onelab-final/internal/entity"
-	"github.com/agadilkhan/onelab-final/internal/repository"
+	"github.com/georgysavva/scany/pgxscan"
 )
 
 type UserRepository struct {
 	Client *Postgres
 }
 
-func NewPostgresUser(client *Postgres) repository.UserRepository {
+func NewPostgresUser(client *Postgres) *UserRepository {
 	return &UserRepository{
 		Client: client,
 	}
@@ -36,4 +37,17 @@ func (r *UserRepository) CreateUser(ctx context.Context, u *entity.User) error {
 	}
 
 	return nil
+}
+
+func (r *UserRepository) GetUser(ctx context.Context, username string) (*entity.User, error) {
+	user := new(entity.User)
+
+	query := fmt.Sprintf(`SELECT first_name, last_name, username, hashed_password FROM %s WHERE username=$1`, usersTable)
+
+	err := pgxscan.Get(ctx, r.Client.Pool, user, query, strings.TrimSpace(username))
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
