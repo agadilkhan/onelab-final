@@ -3,9 +3,10 @@ package jwttoken
 import (
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
-	"time"
 )
 
 var (
@@ -23,7 +24,7 @@ func New(secretKey string) *JWTToken {
 	}
 }
 
-func (j *JWTToken) GenerateToken(userID int64, duration time.Duration) (string, error) {
+func (j *JWTToken) GenerateToken(userID int, duration time.Duration) (string, error) {
 	id, err := uuid.NewRandom()
 	if err != nil {
 		return "", fmt.Errorf("uuid new random err: %w", err)

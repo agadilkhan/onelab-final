@@ -76,9 +76,9 @@ func (h *Handler) loginUser(ctx *gin.Context) {
 	})
 }
 
-func getAuthUserID(ctx *gin.Context) (int64, error) {
-	
-	userID, ok := ctx.MustGet(authUserID).(int64)
+func getAuthUserID(ctx *gin.Context) (int, error) {
+
+	userID, ok := ctx.MustGet(authUserID).(int)
 	if !ok {
 		log.Printf("can't get userID")
 		ctx.JSON(http.StatusBadRequest, &api.Error{

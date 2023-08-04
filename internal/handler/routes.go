@@ -20,6 +20,10 @@ func (h *Handler) InitRouter() *gin.Engine {
 		{
 			posts.GET("/", h.getAllPosts)
 			posts.POST("/", h.createPost)
+			posts.GET("/:id", h.getPostByID)
+			posts.Use(h.checkPermissions())
+			posts.DELETE("/:id", h.deletePost)
+			posts.PUT("/:id", h.updatePost)
 		}
 	}
 

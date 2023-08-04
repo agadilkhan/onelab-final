@@ -16,20 +16,20 @@ import (
 type UserService interface {
 	Register(ctx context.Context, u *entity.User) error
 	Login(ctx context.Context, username, password string) (string, error)
-	VerifyToken(token string) (int64, error)
+	VerifyToken(token string) (int, error)
 }
 
 type userservice struct {
-	Repo repository.UserRepository
+	Repo   repository.UserRepository
 	Config *config.Config
-	Token *jwttoken.JWTToken
+	Token  *jwttoken.JWTToken
 }
 
 func NewUserService(repo repository.UserRepository, config *config.Config, token *jwttoken.JWTToken) *userservice {
 	return &userservice{
-		Repo: repo,
+		Repo:   repo,
 		Config: config,
-		Token: token,
+		Token:  token,
 	}
 }
 
@@ -72,7 +72,7 @@ func (s *userservice) Login(ctx context.Context, username, password string) (str
 	return accessToken, nil
 }
 
-func (s *userservice) VerifyToken(token string) (int64, error) {
+func (s *userservice) VerifyToken(token string) (int, error) {
 	payload, err := s.Token.ValidateToken(token)
 	if err != nil {
 		return 0, fmt.Errorf("validate token err: %w", err)
