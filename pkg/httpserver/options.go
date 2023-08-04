@@ -24,6 +24,6 @@ func WithWriteTimeout(timeout time.Duration) Option {
 
 func WithShutdownTimeout(timeout time.Duration) Option {
 	return func(server *Server) {
-		server.ShutdownTimeout = timeout
+		server.shutdownTimeout = timeout
 	}
 }

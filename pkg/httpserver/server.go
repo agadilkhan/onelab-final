@@ -7,19 +7,19 @@ import (
 )
 
 type Server struct {
-	server *http.Server
-	ShutdownTimeout time.Duration
-	notify chan error
+	server          *http.Server
+	shutdownTimeout time.Duration
+	notify          chan error
 }
 
 func New(handler http.Handler, opts ...Option) *Server {
-	htttpServer := &http.Server {
+	httpServer := &http.Server{
 		Handler: handler,
 	}
 
-	s := &Server {
-		server: htttpServer,
-		notify: make(chan error),
+	s := &Server{
+		server: httpServer,
+		notify: make(chan error, 1),
 	}
 
 	for _, opt := range opts {
@@ -37,7 +37,7 @@ func (s *Server) Start() {
 }
 
 func (s *Server) Shutdown() error {
-	ctx, cancel := context.WithTimeout(context.Background(), s.ShutdownTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), s.shutdownTimeout)
 
 	defer cancel()
 
