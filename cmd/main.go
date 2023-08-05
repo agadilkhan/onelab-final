@@ -6,6 +6,16 @@ import (
 	"fmt"
 )
 
+// @title           Blog API
+// @version         0.0.1
+// @description     API for Blog application
+
+// @host      localhost:8080
+// @BasePath  /
+
+// @securitydefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	cfg, err := config.InitConfig("config.yaml")
 	if err != nil {

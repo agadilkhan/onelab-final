@@ -10,18 +10,25 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Error struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
-}
-
+// @Summary SignUp
+// @Tags auth
+// @Description create user
+// @ID create user
+// @Accept json
+// @Produce json
+// @Param input body api.RegisterRequest true "account info"
+// @Succes 201 {object} api.Ok
+// @Failure 400,404 {object} api.Error
+// @Failure 500 {object} api.Error
+// @Failure default {object} api.Error
+// @Router /auth/register [post]
 func (h *Handler) createUser(ctx *gin.Context) {
 	var req api.RegisterRequest
 
 	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		log.Printf("bind json err: %s \n", err.Error())
-		ctx.JSON(http.StatusBadRequest, &Error{
+		ctx.JSON(http.StatusBadRequest, &api.Error{
 			Code:    -1,
 			Message: err.Error(),
 		})
@@ -37,7 +44,7 @@ func (h *Handler) createUser(ctx *gin.Context) {
 
 	err = h.service.Register(ctx, u)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, &Error{
+		ctx.JSON(http.StatusInternalServerError, &api.Error{
 			Code:    -2,
 			Message: err.Error(),
 		})
@@ -47,6 +54,18 @@ func (h *Handler) createUser(ctx *gin.Context) {
 	ctx.Status(http.StatusCreated)
 }
 
+// @Summary SignIn
+// @Tags auth
+// @Description login user
+// @ID login user
+// @Accept json
+// @Produce json
+// @Param input body api.LoginRequest true "credentials"
+// @Success 200 {string} api.Ok
+// @Failure 400,404 {object} api.Error
+// @Failure 500 {object} api.Error
+// @Failure default {object} api.Error
+// @Router /auth/login [post]
 func (h *Handler) loginUser(ctx *gin.Context) {
 	var req api.LoginRequest
 

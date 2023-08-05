@@ -1,11 +1,17 @@
 package handler
 
 import (
+	_ "github.com/agadilkhan/onelab-final/docs"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func (h *Handler) InitRouter() *gin.Engine {
 	router := gin.Default()
+
+	// swagger add
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	auth := router.Group("/auth")
 	{
